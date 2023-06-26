@@ -1,5 +1,6 @@
 ﻿using GymApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 
 namespace GymApi.Controllers
@@ -8,21 +9,48 @@ namespace GymApi.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        // GET: api/<CustomerController>
+        List<Customer> customers = new List<Customer>( new[] {
+                new Customer(){Id = 1, FirstName = "Nikita", LastName = "Sokolov", Age= 35},
+                new Customer(){Id = 2, FirstName = "Nikita", LastName = "Petrov", Age= 45},
+                new Customer(){Id = 3, FirstName = "Nikita", LastName = "Skvorcov", Age= 25}
+        });
+
+        
+
+        // GET: api/customer
         [HttpGet]
-        public ActionResult Get()
+        public IActionResult Get()
         {
-            return Ok(Test());
+            return Ok(customers);
         }
 
-        public static List<Customer> Test()
+        [HttpGet("{id}")]
+        public IActionResult GetCustomerById(int id)
         {
-            return new List<Customer>
+            Customer customer = customers.SingleOrDefault(p => p.Id == id);
+            if (customer == null)
             {
-                new Customer("Nikita", "Sokolov", 31),
-                new Customer("Nikita", "Petrov", 32),
-                new Customer("Nikita", "Asimov", 33)
-            };
+                return NotFound();
+            }
+            return Ok(customer);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCustomer(int id)
+        {
+            Customer customer = customers.SingleOrDefault(p => p.Id == id);
+            customers.Remove(customer);
+
+            return Ok("Succefully deleted customer");
+        }
+
+        //[HttpPost]
+        //public IActionResult CreateCustomer([FromBody] Customer newCustomer)
+        //{
+        //    customers.Add(newCustomer);
+
+        //    return Created;
+        //}
+
     }
 }
