@@ -7,15 +7,13 @@ namespace GymApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public  class CustomerController : ControllerBase
     {
-        List<Customer> customers = new List<Customer>( new[] {
+        static List<Customer> customers = new List<Customer>( new[] {
                 new Customer(){Id = 1, FirstName = "Nikita", LastName = "Sokolov", Age= 35},
                 new Customer(){Id = 2, FirstName = "Nikita", LastName = "Petrov", Age= 45},
                 new Customer(){Id = 3, FirstName = "Nikita", LastName = "Skvorcov", Age= 25}
         });
-
-        
 
         // GET: api/customer
         [HttpGet]
@@ -41,16 +39,44 @@ namespace GymApi.Controllers
             Customer customer = customers.SingleOrDefault(p => p.Id == id);
             customers.Remove(customer);
 
-            return Ok("Succefully deleted customer");
+            return Ok("Successfully deleted customer");
         }
 
-        //[HttpPost]
-        //public IActionResult CreateCustomer([FromBody] Customer newCustomer)
-        //{
-        //    customers.Add(newCustomer);
+        [HttpDelete]
+        public IActionResult DeleteCustomers()
+        {
+            customers.Clear();
 
-        //    return Created;
-        //}
+            return Ok("Successfuly deleted customers");
+        }
+
+
+        [HttpPost]
+        public IActionResult CreateCustomer([FromBody] Customer newCustomer)
+        {
+            customers.Add(newCustomer);
+
+            return Ok(newCustomer);
+            
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateCustomer([FromBody] Customer customer, int id)
+        {
+            //Customer customer = customers.SingleOrDefault(p => p.Id == id);
+            Customer cst = customers.SingleOrDefault(p => p.Id == id);
+
+            if(cst == null)
+            {
+                return NotFound();
+            }
+
+            cst.FirstName = customer.FirstName;
+            cst.LastName = customer.LastName;
+            cst.Age = customer.Age;
+
+            return Ok(cst);
+        }
 
     }
 }
