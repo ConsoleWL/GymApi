@@ -4,17 +4,17 @@ namespace GymApi.Services.CustomerServices
 {
     public interface ICustomerService
     {
-        List<Customer> GetAllCustomers();
+        Task<List<Customer>> GetAllCustomers();
 
-        Customer GetCustomer(int id);
+        Task<Customer> GetCustomer(int id);
 
-        Customer CreateCustomer(Customer customer);
+        Task<Customer> CreateCustomer(Customer customer);
 
-        Customer UpdateCustomer(Customer customer, int id);
+        Task<Customer> UpdateCustomer(Customer customer, int id);
 
-        Customer DeleteCustomerById(int id);
+        Task<Customer> DeleteCustomerById(int id);
 
-        void DeleteAllCustomers();
+        Task DeleteAllCustomers();
 
     }
 }

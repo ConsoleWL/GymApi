@@ -1,58 +1,70 @@
 ﻿using GymApi.Models;
+using GymDb;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymApi.Services.CustomerServices
 {
     public class CustomerService : ICustomerService
     {
-        static List<Customer> customers = new List<Customer>(new[] {
-                new Customer(){Id = 1, FirstName = "Nikita", LastName = "Sokolov", Age= 35},
-                new Customer(){Id = 2, FirstName = "Nikita", LastName = "Petrov", Age= 45},
-                new Customer(){Id = 3, FirstName = "Nikita", LastName = "Skvorcov", Age= 25}
-        });
+        private readonly GymDbContext _gymDbContext;
 
-        public CustomerService()
+        public CustomerService(GymDbContext gymDbContext)
         {
-            
+            _gymDbContext = gymDbContext;
+        }
+        public async Task<Customer> CreateCustomer(Customer customer)
+        {
+            await _gymDbContext.AddAsync(customer);
+            await _gymDbContext.SaveChangesAsync();
+            return customer;
         }
 
-        public Customer CreateCustomer(Customer customer)
+        public async Task<Customer> DeleteCustomerById(int id)
         {
-            customers.Add(customer);
+            Customer customer = await _gymDbContext.Customers.FindAsync(id);
+            if (customer == null)
+                return null;
+            _gymDbContext.Customers.Remove(customer);
+            await _gymDbContext.SaveChangesAsync();
+
+            return customer;
+
+        }
+
+        public async Task DeleteAllCustomers()
+        {
+            var range = _gymDbContext.Customers.ToList();
+            _gymDbContext.Customers.RemoveRange(range);
+            await _gymDbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Customer>> GetAllCustomers()
+        {
+            return await _gymDbContext.Customers.ToListAsync();
+        }
+
+        public async Task<Customer> GetCustomer(int id)
+        {
+            Customer customer = await _gymDbContext.Customers.FindAsync(id);
+            if (customer == null)
+                return null;
 
             return customer;
         }
 
-        public Customer DeleteCustomerById(int id)
+        public async Task<Customer> UpdateCustomer(Customer customer, int id)
         {
-            Customer customer = customers.SingleOrDefault(c => c.Id == id);
-            customers.Remove(customer);
-            return customer;
-        }
-        public void DeleteAllCustomers()
-        {
-            customers.Clear();
-        }
+            Customer cst = await _gymDbContext.Customers.FindAsync(id);
+            if (cst == null)
+                return null;
 
-        public List<Customer> GetAllCustomers()
-        {
-            return customers;
-        }
+            cst.FirstName = customer.FirstName;
+            cst.LastName = customer.LastName;
+            cst.Age = customer.Age;
 
-        public Customer GetCustomer(int id)
-        {
-            Customer customer = customers.SingleOrDefault(c => c.Id == id);
-            return customer;
-        }
+            await _gymDbContext.SaveChangesAsync();
 
-        public Customer UpdateCustomer(Customer customer, int id)
-        {
-            Customer customer1 = customers.SingleOrDefault(c => c.Id == id);
-
-            customer1.FirstName = customer.FirstName;
-            customer1.LastName = customer.LastName;
-            customer1.Age = customer.Age;
-
-            return customer1;
+            return cst;
         }
     }
 }

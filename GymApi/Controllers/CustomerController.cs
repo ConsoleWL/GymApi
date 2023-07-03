@@ -19,53 +19,45 @@ namespace GymApi.Controllers
 
         // GET: api/customer
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(_ICustomerService.GetAllCustomers());
+            return Ok(await _ICustomerService.GetAllCustomers());
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetCustomerById(int id)
+        public async Task<IActionResult> GetCustomerById(int id)
         {
-            Customer customer = _ICustomerService.GetCustomer(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            return Ok(customer);
+            return Ok(await _ICustomerService.GetCustomer(id));
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCustomer(int id)
+        public async Task<IActionResult> DeleteCustomer(int id)
         {
-            Customer customer = _ICustomerService.DeleteCustomerById(id);
-            if (customer == null)
-                return NotFound("Could not find customer");
-            return Ok("Successfully deleted customer");
+            return Ok(await _ICustomerService.DeleteCustomerById(id));
         }
 
         [HttpDelete]
-        public IActionResult DeleteCustomers()
+        public  async Task<IActionResult> DeleteCustomers()
         {
-            _ICustomerService.DeleteAllCustomers();
+            await _ICustomerService.DeleteAllCustomers();
 
             return Ok("Successfuly deleted customers");
         }
 
         [HttpPost]
-        public IActionResult CreateCustomer([FromBody] Customer newCustomer)
+        public async Task<IActionResult> CreateCustomer([FromBody] Customer newCustomer)
         {
-            _ICustomerService.CreateCustomer(newCustomer);
+            var result = await _ICustomerService.CreateCustomer(newCustomer);
 
-            return Ok(newCustomer);
+            return Ok(result);
 
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCustomer([FromBody] Customer customer, int id)
+        public async Task<IActionResult> UpdateCustomer([FromBody] Customer customer, int id)
         {
 
-            Customer cst = _ICustomerService.UpdateCustomer(customer, id);
+            Customer cst = await _ICustomerService.UpdateCustomer(customer, id);
 
             if (cst == null)
             {
