@@ -1,5 +1,6 @@
 using GymApi.Services.CustomerServices;
 using GymDb;
+using GymDb.Services.EmployeeService;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymApi
@@ -19,6 +20,7 @@ namespace GymApi
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
             //added this
             string connectionString = "Server=.;Database=GymDB;trusted_connection=True;TrustServerCertificate=True;";
