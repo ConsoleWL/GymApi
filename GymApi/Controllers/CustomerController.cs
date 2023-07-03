@@ -24,34 +24,33 @@ namespace GymApi.Controllers
             return Ok(_ICustomerService.GetAllCustomers());
         }
 
-        //[HttpGet("{id}")]
-        //public IActionResult GetCustomerById(int id)
-        //{
-        //    Customer customer = customers.SingleOrDefault(p => p.Id == id);
-        //    if (customer == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Ok(customer);
-        //}
+        [HttpGet("{id}")]
+        public IActionResult GetCustomerById(int id)
+        {
+            Customer customer = _ICustomerService.GetCustomer(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            return Ok(customer);
+        }
 
-        //[HttpDelete("{id}")]
-        //public IActionResult DeleteCustomer(int id)
-        //{
-        //    Customer customer = customers.SingleOrDefault(p => p.Id == id);
-        //    customers.Remove(customer);
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCustomer(int id)
+        {
+            Customer customer = _ICustomerService.DeleteCustomerById(id);
+            if (customer == null)
+                return NotFound("Could not find customer");
+            return Ok("Successfully deleted customer");
+        }
 
-        //    return Ok("Successfully deleted customer");
-        //}
+        [HttpDelete]
+        public IActionResult DeleteCustomers()
+        {
+            _ICustomerService.DeleteAllCustomers();
 
-        //[HttpDelete]
-        //public IActionResult DeleteCustomers()
-        //{
-        //    customers.Clear();
-
-        //    return Ok("Successfuly deleted customers");
-        //}
-
+            return Ok("Successfuly deleted customers");
+        }
 
         [HttpPost]
         public IActionResult CreateCustomer([FromBody] Customer newCustomer)
@@ -62,23 +61,19 @@ namespace GymApi.Controllers
 
         }
 
-        //[HttpPut("{id}")]
-        //public IActionResult UpdateCustomer([FromBody] Customer customer, int id)
-        //{
-        //    //Customer customer = customers.SingleOrDefault(p => p.Id == id);
-        //    Customer cst = customers.SingleOrDefault(p => p.Id == id);
+        [HttpPut("{id}")]
+        public IActionResult UpdateCustomer([FromBody] Customer customer, int id)
+        {
 
-        //    if(cst == null)
-        //    {
-        //        return NotFound();
-        //    }
+            Customer cst = _ICustomerService.UpdateCustomer(customer, id);
 
-        //    cst.FirstName = customer.FirstName;
-        //    cst.LastName = customer.LastName;
-        //    cst.Age = customer.Age;
+            if (cst == null)
+            {
+                return NotFound();
+            }
 
-        //    return Ok(cst);
-        //}
+            return Ok(cst);
+        }
 
     }
 }

@@ -1,4 +1,6 @@
 using GymApi.Services.CustomerServices;
+using GymDb;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymApi
 {
@@ -18,6 +20,15 @@ namespace GymApi
 
             builder.Services.AddScoped<ICustomerService, CustomerService>();
 
+            //added this
+            string connectionString = "Server=.;Database=GymDB;trusted_connection=True;TrustServerCertificate=True;";
+
+            builder.Services.AddDbContext<GymDbContext>(options=>
+            {
+                options.UseSqlServer(connectionString);
+
+            });
+            //
             var app = builder.Build();
 
             

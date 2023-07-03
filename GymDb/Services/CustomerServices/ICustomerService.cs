@@ -14,5 +14,7 @@ namespace GymApi.Services.CustomerServices
 
         Customer DeleteCustomerById(int id);
 
+        void DeleteAllCustomers();
+
     }
 }

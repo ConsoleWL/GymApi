@@ -25,7 +25,12 @@ namespace GymApi.Services.CustomerServices
         public Customer DeleteCustomerById(int id)
         {
             Customer customer = customers.SingleOrDefault(c => c.Id == id);
+            customers.Remove(customer);
             return customer;
+        }
+        public void DeleteAllCustomers()
+        {
+            customers.Clear();
         }
 
         public List<Customer> GetAllCustomers()
@@ -35,12 +40,19 @@ namespace GymApi.Services.CustomerServices
 
         public Customer GetCustomer(int id)
         {
-            throw new NotImplementedException();
+            Customer customer = customers.SingleOrDefault(c => c.Id == id);
+            return customer;
         }
 
         public Customer UpdateCustomer(Customer customer, int id)
         {
-            throw new NotImplementedException();
+            Customer customer1 = customers.SingleOrDefault(c => c.Id == id);
+
+            customer1.FirstName = customer.FirstName;
+            customer1.LastName = customer.LastName;
+            customer1.Age = customer.Age;
+
+            return customer1;
         }
     }
 }
